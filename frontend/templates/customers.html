@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block page_title %}Klijenti i lojalnost{% endblock %}
+{% block content %}
+<section class="panel">
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Customer 360</p>
+            <h3>Baza klijenata</h3>
+        </div>
+    </div>
+    <div class="card-grid">
+        {% for customer in customers %}
+        <article class="panel nested-card">
+            <div class="row-between">
+                <div>
+                    <strong>{{ customer.name }}</strong>
+                    <p>{{ customer.email }}</p>
+                </div>
+                <span class="status-pill {% if customer.tier == 'Gold' %}warning{% elif customer.tier == 'Silver' %}info{% endif %}">{{ customer.tier }}</span>
+            </div>
+            <div class="stats-inline small-inline">
+                <div><strong>{{ customer.visits }}</strong><span>Posjeta</span></div>
+                <div><strong>{{ customer.last }}</strong><span>Zadnji kontakt</span></div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

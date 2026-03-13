@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block page_title %}Skladište i dijelovi{% endblock %}
+{% block content %}
+<section class="grid two-one">
+    <div class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Parts stock</p>
+                <h3>Stanje rezervnih dijelova</h3>
+            </div>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr><th>Artikal</th><th>Šifra</th><th>Količina</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {% for item in inventory %}
+                <tr>
+                    <td>{{ item.part }}</td>
+                    <td>{{ item.sku }}</td>
+                    <td>{{ item.stock }}</td>
+                    <td><span class="status-pill {% if item.state == 'Nisko stanje' %}warning{% elif item.state == 'Hitno naručiti' %}danger{% else %}success{% endif %}">{{ item.state }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="panel">
+        <p class="eyebrow">Procurement</p>
+        <h3>Preporuke za nabavku</h3>
+        <div class="action-list">
+            <div class="action-tile"><strong>Kočione pločice</strong><span>Naručiti minimalno 10 setova za narednu sedmicu.</span></div>
+            <div class="action-tile"><strong>Filter zraka</strong><span>Dopuna skladišta zbog povećanog broja malih servisa.</span></div>
+            <div class="action-tile"><strong>Ulje 5W-30</strong><span>Trenutno stanje stabilno, dovoljne zalihe.</span></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

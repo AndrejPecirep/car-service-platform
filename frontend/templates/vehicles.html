@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block page_title %}Vozila i stanje{% endblock %}
+{% block content %}
+<section class="panel section-head search-panel">
+    <div>
+        <p class="eyebrow">Fleet overview</p>
+        <h3>Pregled svih vozila u servisu</h3>
+    </div>
+    <input id="tableSearch" data-table-target="vehicleTable" type="search" placeholder="Pretraži po brendu, modelu ili tablici...">
+</section>
+
+<section class="panel">
+    <table id="vehicleTable" class="data-table">
+        <thead>
+            <tr>
+                <th>Vozilo</th>
+                <th>Vlasnik</th>
+                <th>Status</th>
+                <th>Zdravlje</th>
+                <th>Sljedeći servis</th>
+                <th>Radnja</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vehicle in vehicles %}
+            <tr>
+                <td>
+                    <strong>{{ vehicle.brand }} {{ vehicle.model }}</strong>
+                    <span class="table-sub">{{ vehicle.year }} · {{ vehicle.plate }}</span>
+                </td>
+                <td>{{ vehicle.owner }}</td>
+                <td><span class="status-pill">{{ vehicle.status }}</span></td>
+                <td><span class="status-pill {% if vehicle.health == 'Pažnja' %}warning{% elif vehicle.health == 'Odlično' %}success{% endif %}">{{ vehicle.health }}</span></td>
+                <td>{{ vehicle.next_service }}</td>
+                <td>{{ vehicle.service_type }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="kpi-grid compact-grid">
+    {% for vehicle in vehicles %}
+    <article class="panel mini-vehicle-card">
+        <div class="row-between"><strong>{{ vehicle.brand }} {{ vehicle.model }}</strong><span class="status-pill">{{ vehicle.status }}</span></div>
+        <p class="muted">{{ vehicle.plate }} · {{ vehicle.owner }}</p>
+        <div class="progress"><span style="width: {{ 65 + loop.index0 * 8 }}%"></span></div>
+        <small>Napredak naloga: {{ 65 + loop.index0 * 8 }}%</small>
+    </article>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block page_title %}Operativni dashboard{% endblock %}
+{% block content %}
+<section class="grid two-three">
+    <div class="panel hero-card">
+        <div>
+            <p class="eyebrow">Danas u radionici</p>
+            <h3>Radni tok je stabilan i tim je na 76% opterećenja.</h3>
+            <p class="muted">Pratite otvorene naloge, rezervacije i isporuke bez prebacivanja između više ekrana.</p>
+        </div>
+        <div class="stats-inline">
+            <div><strong>{{ kpis.revenue_today }} KM</strong><span>Današnji prihod</span></div>
+            <div><strong>{{ kpis.open_orders }}</strong><span>Otvoreni nalozi</span></div>
+            <div><strong>{{ kpis.vehicles_in_shop }}</strong><span>Vozila u radionici</span></div>
+            <div><strong>{{ kpis.on_time_rate }}%</strong><span>Na vrijeme</span></div>
+        </div>
+    </div>
+    <div class="panel user-card">
+        <div class="avatar lg">{{ current_user.name[:1] }}</div>
+        <div>
+            <strong>{{ current_user.name }}</strong>
+            <p>{{ current_user.role }} · {{ current_user.email }}</p>
+            <span class="status-pill warning">Demo workspace</span>
+        </div>
+    </div>
+</section>
+
+<section class="kpi-grid">
+    <article class="panel metric-card"><span>Prihod danas</span><strong>{{ kpis.revenue_today }} KM</strong><small>+14% u odnosu na jučer</small></article>
+    <article class="panel metric-card"><span>Otvoreni nalozi</span><strong>{{ kpis.open_orders }}</strong><small>4 zahtijevaju odobrenje klijenta</small></article>
+    <article class="panel metric-card"><span>Vozila u pogonu</span><strong>{{ kpis.vehicles_in_shop }}</strong><small>2 spremna za preuzimanje</small></article>
+    <article class="panel metric-card"><span>Tačnost rokova</span><strong>{{ kpis.on_time_rate }}%</strong><small>Prosjek zadnjih 30 dana</small></article>
+</section>
+
+<section class="grid two-one">
+    <div class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Današnji raspored</p>
+                <h3>Servisni tok rada</h3>
+            </div>
+            <a class="text-link" href="{{ url_for('appointments') }}">Vidi sve</a>
+        </div>
+        <div class="timeline">
+            {% for item in timeline %}
+            <div class="timeline-item {{ item.type }}">
+                <span>{{ item.time }}</span>
+                <div>
+                    <strong>{{ item.title }}</strong>
+                    <p>{{ 'Završeno' if item.type == 'done' else 'Aktivno' if item.type == 'current' else 'Planirano' }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Quick actions</p>
+                <h3>Brze operacije</h3>
+            </div>
+        </div>
+        <div class="action-list">
+            <a class="action-tile" href="{{ url_for('booking') }}"><strong>Novi termin</strong><span>Kreiraj rezervaciju za servis</span></a>
+            <a class="action-tile" href="{{ url_for('vehicles') }}"><strong>Status vozila</strong><span>Pregled aktivnih vozila i zdravlja</span></a>
+            <a class="action-tile" href="{{ url_for('inventory') }}"><strong>Skladište</strong><span>Provjeri artikle sa niskim stanjem</span></a>
+        </div>
+    </div>
+</section>
+
+<section class="grid two-one">
+    <div class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Aktivni nalozi</p>
+                <h3>Najnoviji termini</h3>
+            </div>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr><th>Klijent</th><th>Vozilo</th><th>Usluga</th><th>Status</th><th>Iznos</th></tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments[:4] %}
+                <tr>
+                    <td>{{ appointment.customer }}</td>
+                    <td>{{ appointment.vehicle }} <span class="table-sub">{{ appointment.plate }}</span></td>
+                    <td>{{ appointment.service }}</td>
+                    <td><span class="status-pill">{{ appointment.status }}</span></td>
+                    <td>{{ appointment.amount }} KM</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Top resursi</p>
+                <h3>Iskorištenost tima</h3>
+            </div>
+        </div>
+        <div class="utilization-list">
+            {% for member in staff %}
+            <div>
+                <div class="row-between"><strong>{{ member.name }}</strong><span>{{ member.utilization }}%</span></div>
+                <div class="progress"><span style="width: {{ member.utilization }}%"></span></div>
+                <p class="muted small">{{ member.role }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

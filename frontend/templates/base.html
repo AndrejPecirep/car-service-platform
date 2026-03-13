@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_name }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div>
+                <div class="brand-mark">AF</div>
+                <div class="brand-text">
+                    <h1>{{ app_name }}</h1>
+                    <p>Professional workshop operations</p>
+                </div>
+            </div>
+
+            <nav class="nav-links">
+                <a href="{{ url_for('dashboard') }}" class="{% if request.path == '/dashboard' %}active{% endif %}">Dashboard</a>
+                <a href="{{ url_for('vehicles') }}" class="{% if request.path == '/vehicles' %}active{% endif %}">Vozila</a>
+                <a href="{{ url_for('appointments') }}" class="{% if request.path == '/appointments' %}active{% endif %}">Nalozi i termini</a>
+                <a href="{{ url_for('booking') }}" class="{% if request.path == '/booking' %}active{% endif %}">Nova rezervacija</a>
+                <a href="{{ url_for('customers') }}" class="{% if request.path == '/customers' %}active{% endif %}">Klijenti</a>
+                <a href="{{ url_for('inventory') }}" class="{% if request.path == '/inventory' %}active{% endif %}">Skladište</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-card compact">
+                    <div class="avatar">{{ current_user.name[:1] if current_user else 'A' }}</div>
+                    <div>
+                        <strong>{{ current_user.name if current_user else 'Gost' }}</strong>
+                        <span>{{ current_user.role if current_user else 'Demo pristup' }}</span>
+                    </div>
+                </div>
+                <a class="ghost-link" href="{{ url_for('logout') }}">Odjava</a>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">Auto service workspace</p>
+                    <h2>{% block page_title %}Pregled{% endblock %}</h2>
+                </div>
+                <div class="topbar-right">
+                    <div class="status-pill success">Radionica aktivna</div>
+                    <div class="date-chip">{{ demo_now.strftime('%d.%m.%Y · %H:%M') }}</div>
+                </div>
+            </header>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-stack">
+                        {% for category, message in messages %}
+                            <div class="flash {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

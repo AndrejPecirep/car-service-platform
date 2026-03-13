@@ -1,6 +1,6 @@
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
 
 from .models import Appointment
 from .serializers import AppointmentSerializer
@@ -13,14 +13,13 @@ class AppointmentViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        queryset = Appointment.objects.select_related("vehicle", "service", "staff")
 
         if user.role == "ADMIN":
-            return Appointment.objects.all()
-
+            return queryset.order_by("start_time")
         if user.role == "STAFF":
-            return Appointment.objects.filter(staff=user)
-
-        return Appointment.objects.filter(vehicle__owner=user)
+            return queryset.filter(staff=user).order_by("start_time")
+        return queryset.filter(vehicle__owner=user).order_by("start_time")
 
     def perform_create(self, serializer):
         staff = serializer.validated_data.get("staff")
@@ -28,8 +27,6 @@ class AppointmentViewSet(ModelViewSet):
         end_time = serializer.validated_data.get("end_time")
 
         if staff and not is_time_slot_available(staff, start_time, end_time):
-            raise ValidationError(
-                "Odabrani termin nije dostupan za ovog djelatnika."
-            )
+            raise ValidationError("Odabrani termin nije dostupan za ovog djelatnika.")
 
-        serializer.save(status="CONFIRMED")
+        serializer.save(status=Appointment.Status.CONFIRMED)

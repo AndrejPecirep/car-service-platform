@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prijava | AutoFlow Service Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-body">
+    <section class="auth-layout">
+        <div class="hero-panel glass-card">
+            <span class="status-pill info">Nova generacija platforme</span>
+            <h1>Upravljajte servisom, terminima, dijelovima i klijentima iz jednog mjesta.</h1>
+            <p>
+                Redizajnirana aplikacija nudi moderan pregled radionice, brzu rezervaciju termina,
+                praćenje stanja vozila i jasan operativni dashboard za tim.
+            </p>
+            <div class="feature-grid">
+                <article class="mini-card">
+                    <strong>Live KPI</strong>
+                    <span>Prihod, nalozi i iskorištenost tima</span>
+                </article>
+                <article class="mini-card">
+                    <strong>Booking flow</strong>
+                    <span>Brza rezervacija uz preporučene termine</span>
+                </article>
+                <article class="mini-card">
+                    <strong>CRM + inventory</strong>
+                    <span>Klijenti, lojalnost i stanje dijelova</span>
+                </article>
+            </div>
+        </div>
+
+        <div class="auth-card glass-card">
+            <div class="brand-inline">
+                <div class="brand-mark">AF</div>
+                <div>
+                    <h2>AutoFlow Service Hub</h2>
+                    <p>Demo login za pregled platforme</p>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form class="auth-form" action="{{ url_for('login') }}" method="post">
+                <label>Ime i prezime</label>
+                <input name="name" type="text" placeholder="npr. Adnan Softić">
+
+                <label>Email</label>
+                <input name="email" type="email" placeholder="demo@autoflow.ba" required>
+
+                <label>Lozinka</label>
+                <input name="password" type="password" placeholder="••••••••" required>
+
+                <button type="submit">Prijavi se u aplikaciju</button>
+            </form>
+
+            <p class="helper-text">Za demo pristup unesite bilo koji email i lozinku.</p>
+        </div>
+    </section>
+</body>
+</html>
