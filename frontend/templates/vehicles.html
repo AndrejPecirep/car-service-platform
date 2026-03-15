@@ -1,52 +1,40 @@
-{% extends 'base.html' %}
-{% block page_title %}Vozila i stanje{% endblock %}
+{% extends "base.html" %}
+{% block title %}Vehicles | TorqueFlow{% endblock %}
 {% block content %}
-<section class="panel section-head search-panel">
+<section class="header-row">
     <div>
-        <p class="eyebrow">Fleet overview</p>
-        <h3>Pregled svih vozila u servisu</h3>
+        <span class="eyebrow">Vehicle registry</span>
+        <h1>Customer vehicles</h1>
+        <p>All vehicles currently managed by the workshop.</p>
     </div>
-    <input id="tableSearch" data-table-target="vehicleTable" type="search" placeholder="Pretraži po brendu, modelu ili tablici...">
 </section>
 
 <section class="panel">
-    <table id="vehicleTable" class="data-table">
-        <thead>
-            <tr>
-                <th>Vozilo</th>
-                <th>Vlasnik</th>
-                <th>Status</th>
-                <th>Zdravlje</th>
-                <th>Sljedeći servis</th>
-                <th>Radnja</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for vehicle in vehicles %}
-            <tr>
-                <td>
-                    <strong>{{ vehicle.brand }} {{ vehicle.model }}</strong>
-                    <span class="table-sub">{{ vehicle.year }} · {{ vehicle.plate }}</span>
-                </td>
-                <td>{{ vehicle.owner }}</td>
-                <td><span class="status-pill">{{ vehicle.status }}</span></td>
-                <td><span class="status-pill {% if vehicle.health == 'Pažnja' %}warning{% elif vehicle.health == 'Odlično' %}success{% endif %}">{{ vehicle.health }}</span></td>
-                <td>{{ vehicle.next_service }}</td>
-                <td>{{ vehicle.service_type }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</section>
-
-<section class="kpi-grid compact-grid">
-    {% for vehicle in vehicles %}
-    <article class="panel mini-vehicle-card">
-        <div class="row-between"><strong>{{ vehicle.brand }} {{ vehicle.model }}</strong><span class="status-pill">{{ vehicle.status }}</span></div>
-        <p class="muted">{{ vehicle.plate }} · {{ vehicle.owner }}</p>
-        <div class="progress"><span style="width: {{ 65 + loop.index0 * 8 }}%"></span></div>
-        <small>Napredak naloga: {{ 65 + loop.index0 * 8 }}%</small>
-    </article>
-    {% endfor %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Owner</th>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>Year</th>
+                    <th>License plate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehicle in vehicles %}
+                <tr>
+                    <td>{{ vehicle.owner_name }}</td>
+                    <td>{{ vehicle.brand }}</td>
+                    <td>{{ vehicle.model }}</td>
+                    <td>{{ vehicle.year }}</td>
+                    <td>{{ vehicle.license_plate }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5">No vehicles found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </section>
 {% endblock %}

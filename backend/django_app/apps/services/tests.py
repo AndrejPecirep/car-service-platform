@@ -6,10 +6,10 @@ class ServiceModelTest(TestCase):
 
     def test_create_service(self):
         service = Service.objects.create(
-            name="Mali servis",
+            name="Basic Service",
             duration_minutes=60,
             price=120.00
         )
 
-        self.assertEqual(service.name, "Mali servis")
+        self.assertEqual(service.name, "Basic Service")
         self.assertEqual(service.duration_minutes, 60)

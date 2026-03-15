@@ -1,29 +1,38 @@
-{% extends 'base.html' %}
-{% block page_title %}Klijenti i lojalnost{% endblock %}
+{% extends "base.html" %}
+{% block title %}Customers | TorqueFlow{% endblock %}
 {% block content %}
-<section class="panel">
-    <div class="section-head">
-        <div>
-            <p class="eyebrow">Customer 360</p>
-            <h3>Baza klijenata</h3>
-        </div>
+<section class="header-row">
+    <div>
+        <span class="eyebrow">Customer relationships</span>
+        <h1>Customers</h1>
+        <p>Browse client records linked to the workshop platform.</p>
     </div>
-    <div class="card-grid">
-        {% for customer in customers %}
-        <article class="panel nested-card">
-            <div class="row-between">
-                <div>
-                    <strong>{{ customer.name }}</strong>
-                    <p>{{ customer.email }}</p>
-                </div>
-                <span class="status-pill {% if customer.tier == 'Gold' %}warning{% elif customer.tier == 'Silver' %}info{% endif %}">{{ customer.tier }}</span>
-            </div>
-            <div class="stats-inline small-inline">
-                <div><strong>{{ customer.visits }}</strong><span>Posjeta</span></div>
-                <div><strong>{{ customer.last }}</strong><span>Zadnji kontakt</span></div>
-            </div>
-        </article>
-        {% endfor %}
+</section>
+
+<section class="panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.role }}</td>
+                    <td>{{ customer.created_at }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4">No customers found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </section>
 {% endblock %}

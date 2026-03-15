@@ -1,38 +1,41 @@
-{% extends 'base.html' %}
-{% block page_title %}Skladište i dijelovi{% endblock %}
+{% extends "base.html" %}
+{% block title %}Inventory | TorqueFlow{% endblock %}
 {% block content %}
-<section class="grid two-one">
-    <div class="panel">
-        <div class="section-head">
-            <div>
-                <p class="eyebrow">Parts stock</p>
-                <h3>Stanje rezervnih dijelova</h3>
-            </div>
-        </div>
-        <table class="data-table">
+<section class="header-row">
+    <div>
+        <span class="eyebrow">Workshop stock</span>
+        <h1>Inventory snapshot</h1>
+        <p>A lightweight inventory overview for quick operational checks.</p>
+    </div>
+</section>
+
+<section class="stats-grid compact">
+    <article class="stat-card"><span>Total items</span><strong>{{ items|length }}</strong><small>Tracked stock entries</small></article>
+    <article class="stat-card"><span>Critical items</span><strong>{{ items | selectattr('status', 'equalto', 'Critical') | list | length }}</strong><small>Need urgent replenishment</small></article>
+</section>
+
+<section class="panel">
+    <div class="table-wrap">
+        <table>
             <thead>
-                <tr><th>Artikal</th><th>Šifra</th><th>Količina</th><th>Status</th></tr>
+                <tr>
+                    <th>Item</th>
+                    <th>SKU</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                </tr>
             </thead>
             <tbody>
-                {% for item in inventory %}
+                {% for item in items %}
                 <tr>
-                    <td>{{ item.part }}</td>
+                    <td>{{ item.name }}</td>
                     <td>{{ item.sku }}</td>
                     <td>{{ item.stock }}</td>
-                    <td><span class="status-pill {% if item.state == 'Nisko stanje' %}warning{% elif item.state == 'Hitno naručiti' %}danger{% else %}success{% endif %}">{{ item.state }}</span></td>
+                    <td><span class="status {% if item.status == 'Critical' %}cancelled{% elif item.status == 'Low stock' %}pending{% else %}confirmed{% endif %}">{{ item.status }}</span></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </div>
-    <div class="panel">
-        <p class="eyebrow">Procurement</p>
-        <h3>Preporuke za nabavku</h3>
-        <div class="action-list">
-            <div class="action-tile"><strong>Kočione pločice</strong><span>Naručiti minimalno 10 setova za narednu sedmicu.</span></div>
-            <div class="action-tile"><strong>Filter zraka</strong><span>Dopuna skladišta zbog povećanog broja malih servisa.</span></div>
-            <div class="action-tile"><strong>Ulje 5W-30</strong><span>Trenutno stanje stabilno, dovoljne zalihe.</span></div>
-        </div>
     </div>
 </section>
 {% endblock %}

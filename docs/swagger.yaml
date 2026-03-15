@@ -2,18 +2,30 @@ openapi: 3.0.0
 info:
   title: Car Service Platform API
   version: 1.0.0
-
 paths:
-  /api/health:
-    get:
-      summary: Health check
-      responses:
-        "200":
-          description: OK
-
-  /api/booking:
+  /api/auth/login/:
     post:
-      summary: Create booking
-      responses:
-        "201":
-          description: Created
+      summary: Sign in a user
+  /api/auth/register/:
+    post:
+      summary: Register a new client account
+  /api/vehicles/:
+    get:
+      summary: List vehicles
+  /api/services/:
+    get:
+      summary: List services
+  /api/appointments/:
+    get:
+      summary: List appointments
+    post:
+      summary: Create an appointment
+  /api/customers/:
+    get:
+      summary: List customers
+  /api/staff/:
+    get:
+      summary: List staff members
+  /api/dashboard/summary/:
+    get:
+      summary: Get dashboard metrics

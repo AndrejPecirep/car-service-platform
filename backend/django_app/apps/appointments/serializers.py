@@ -7,40 +7,36 @@ from .models import Appointment
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
-    vehicle_label = serializers.SerializerMethodField(read_only=True)
-    service_label = serializers.CharField(source="service.name", read_only=True)
-    staff_label = serializers.SerializerMethodField(read_only=True)
+    vehicle_display = serializers.CharField(source="vehicle.__str__", read_only=True)
+    service_name = serializers.CharField(source="service.name", read_only=True)
+    staff_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Appointment
         fields = (
             "id",
             "vehicle",
-            "vehicle_label",
             "service",
-            "service_label",
             "staff",
-            "staff_label",
             "start_time",
             "end_time",
             "status",
+            "vehicle_display",
+            "service_name",
+            "staff_name",
         )
         read_only_fields = ("status", "end_time")
+
+    def get_staff_name(self, obj):
+        if not obj.staff:
+            return None
+        return f"{obj.staff.first_name} {obj.staff.last_name}".strip() or obj.staff.email
 
     def validate(self, data):
         start_time = data.get("start_time")
         service = data.get("service")
-
         if start_time and start_time < now():
-            raise serializers.ValidationError("Termin ne može biti u prošlosti.")
-
-        if service and start_time:
+            raise serializers.ValidationError("The appointment cannot be scheduled in the past.")
+        if start_time and service:
             data["end_time"] = start_time + timedelta(minutes=service.duration_minutes)
-
         return data
-
-    def get_vehicle_label(self, obj):
-        return str(obj.vehicle)
-
-    def get_staff_label(self, obj):
-        return str(obj.staff) if obj.staff else None

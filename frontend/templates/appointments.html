@@ -1,45 +1,45 @@
-{% extends 'base.html' %}
-{% block page_title %}Nalozi i termini{% endblock %}
+{% extends "base.html" %}
+{% block title %}Appointments | TorqueFlow{% endblock %}
 {% block content %}
-<section class="grid two-one">
-    <div class="panel">
-        <div class="section-head">
-            <div>
-                <p class="eyebrow">Service orders</p>
-                <h3>Pregled rezervacija</h3>
-            </div>
-            <a class="text-link" href="{{ url_for('booking') }}">Dodaj novi termin</a>
-        </div>
-        <table class="data-table">
+<section class="header-row">
+    <div>
+        <span class="eyebrow">Service planning</span>
+        <h1>Appointments</h1>
+        <p>Review scheduled workshop activity and current booking statuses.</p>
+    </div>
+    <div class="header-actions">
+        <a class="button" href="/booking">Create appointment</a>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="table-wrap">
+        <table>
             <thead>
-                <tr><th>ID</th><th>Klijent</th><th>Termin</th><th>Status</th><th>Prioritet</th></tr>
+                <tr>
+                    <th>Vehicle</th>
+                    <th>Service</th>
+                    <th>Staff</th>
+                    <th>Start time</th>
+                    <th>End time</th>
+                    <th>Status</th>
+                </tr>
             </thead>
             <tbody>
                 {% for appointment in appointments %}
                 <tr>
-                    <td>#{{ appointment.id }}</td>
-                    <td>{{ appointment.customer }}<span class="table-sub">{{ appointment.vehicle }}</span></td>
-                    <td>{{ appointment.start.strftime('%d.%m. %H:%M') }} - {{ appointment.end.strftime('%H:%M') }}</td>
-                    <td><span class="status-pill">{{ appointment.status }}</span></td>
-                    <td><span class="status-pill {% if appointment.priority == 'Visok' %}danger{% endif %}">{{ appointment.priority }}</span></td>
+                    <td>{{ appointment.vehicle_display }}</td>
+                    <td>{{ appointment.service_name }}</td>
+                    <td>{{ appointment.staff_name or 'Unassigned' }}</td>
+                    <td>{{ appointment.start_time }}</td>
+                    <td>{{ appointment.end_time }}</td>
+                    <td><span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span></td>
                 </tr>
+                {% else %}
+                <tr><td colspan="6">No appointments found.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
-    </div>
-    <div class="panel">
-        <div class="section-head">
-            <div>
-                <p class="eyebrow">Status board</p>
-                <h3>Distribucija posla</h3>
-            </div>
-        </div>
-        <div class="kanban-col">
-            <div class="kanban-card"><strong>Zakazano</strong><span>2 termina spremna za prijem</span></div>
-            <div class="kanban-card"><strong>U toku</strong><span>1 vozilo trenutno na liftu</span></div>
-            <div class="kanban-card"><strong>Čeka dijelove</strong><span>1 nalog treba odobrenje nabavke</span></div>
-            <div class="kanban-card"><strong>Spremno</strong><span>2 vozila čekaju preuzimanje</span></div>
-        </div>
     </div>
 </section>
 {% endblock %}

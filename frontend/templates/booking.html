@@ -1,86 +1,52 @@
-{% extends 'base.html' %}
-{% block page_title %}Nova rezervacija{% endblock %}
+{% extends "base.html" %}
+{% block title %}Book Service | TorqueFlow{% endblock %}
 {% block content %}
-<section class="grid two-one">
-    <form class="panel form-panel" action="{{ url_for('booking') }}" method="post">
-        <div class="section-head">
-            <div>
-                <p class="eyebrow">Booking assistant</p>
-                <h3>Kreiranje novog termina</h3>
-            </div>
-        </div>
-        <div class="form-grid">
-            <div>
-                <label>Klijent</label>
-                <input name="customer" placeholder="Ime i prezime klijenta" required>
-            </div>
-            <div>
-                <label>Telefon</label>
-                <input name="phone" placeholder="+387 6x xxx xxx">
-            </div>
-            <div>
-                <label>Marka</label>
-                <input name="brand" placeholder="Audi, BMW, VW..." required>
-            </div>
-            <div>
-                <label>Model</label>
-                <input name="model" placeholder="A4, Golf 7..." required>
-            </div>
-            <div>
-                <label>Tablice</label>
-                <input name="plate" placeholder="SA-000-AA" required>
-            </div>
-            <div>
-                <label>Usluga</label>
-                <select name="service_id">
-                    {% for service in services %}
-                    <option value="{{ service.id }}">{{ service.name }} · {{ service.duration }} min · {{ service.price }} KM</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label>Dodijeli savjetnika</label>
-                <select name="staff_id">
-                    {% for member in staff %}
-                    <option value="{{ member.id }}">{{ member.name }} · {{ member.role }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label>Preferirani termin</label>
-                <input name="date" type="datetime-local" required>
-            </div>
-            <div class="full-width">
-                <label>Napomena</label>
-                <textarea name="notes" rows="4" placeholder="Opis kvara, simptomi, dodatne informacije..."></textarea>
-            </div>
-        </div>
-        <button type="submit">Sačuvaj rezervaciju</button>
-    </form>
-
-    <div class="stack-gap">
-        <section class="panel">
-            <p class="eyebrow">Predloženi termini</p>
-            <h3>Najbliže slobodne opcije</h3>
-            <div class="chip-wrap">
-                {% for slot in booking_slots %}
-                <span class="date-chip">{{ slot }}</span>
-                {% endfor %}
-            </div>
-        </section>
-        <section class="panel">
-            <p class="eyebrow">Aktivne usluge</p>
-            <h3>Cjenovnik i trajanje</h3>
-            {% for service in services %}
-            <div class="quote-row">
-                <div>
-                    <strong>{{ service.name }}</strong>
-                    <p>{{ service.duration }} min procijenjenog rada</p>
-                </div>
-                <strong>{{ service.price }} KM</strong>
-            </div>
-            {% endfor %}
-        </section>
+<section class="header-row">
+    <div>
+        <span class="eyebrow">Appointment scheduling</span>
+        <h1>Create a booking</h1>
+        <p>Pick a vehicle, service, staff member, and preferred start time.</p>
     </div>
+</section>
+
+<section class="panel form-panel">
+    <form method="post" action="/booking" class="booking-grid">
+        <label>
+            Vehicle
+            <select name="vehicle" required>
+                <option value="">Select vehicle</option>
+                {% for vehicle in vehicles %}
+                <option value="{{ vehicle.id }}">{{ vehicle.brand }} {{ vehicle.model }} — {{ vehicle.license_plate }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Service
+            <select name="service" required>
+                <option value="">Select service</option>
+                {% for service in services %}
+                <option value="{{ service.id }}">{{ service.name }} — {{ service.duration_minutes }} min</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Staff member
+            <select name="staff" required>
+                <option value="">Select staff member</option>
+                {% for member in staff_members %}
+                <option value="{{ member.id }}">{{ member.full_name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Start time
+            <input type="datetime-local" name="start_time" required>
+        </label>
+
+        <button type="submit">Create appointment</button>
+    </form>
 </section>
 {% endblock %}

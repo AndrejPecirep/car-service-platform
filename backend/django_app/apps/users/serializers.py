@@ -1,8 +1,12 @@
-from rest_framework import serializers
-from .models import User
 from django.contrib.auth.hashers import make_password
+from rest_framework import serializers
+
+from .models import User
+
 
 class UserSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = (
@@ -10,11 +14,15 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "last_name",
+            "full_name",
             "role",
             "created_at",
         )
 
-# Serializer za registraciju
+    def get_full_name(self, obj):
+        return f"{obj.first_name} {obj.last_name}".strip()
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, min_length=6)
 

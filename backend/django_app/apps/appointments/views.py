@@ -13,13 +13,12 @@ class AppointmentViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = Appointment.objects.select_related("vehicle", "service", "staff")
-
+        queryset = Appointment.objects.select_related("vehicle", "service", "staff", "vehicle__owner").order_by("-start_time")
         if user.role == "ADMIN":
-            return queryset.order_by("start_time")
+            return queryset
         if user.role == "STAFF":
-            return queryset.filter(staff=user).order_by("start_time")
-        return queryset.filter(vehicle__owner=user).order_by("start_time")
+            return queryset.filter(staff=user)
+        return queryset.filter(vehicle__owner=user)
 
     def perform_create(self, serializer):
         staff = serializer.validated_data.get("staff")
@@ -27,6 +26,6 @@ class AppointmentViewSet(ModelViewSet):
         end_time = serializer.validated_data.get("end_time")
 
         if staff and not is_time_slot_available(staff, start_time, end_time):
-            raise ValidationError("Odabrani termin nije dostupan za ovog djelatnika.")
+            raise ValidationError("The selected staff member is not available for this time slot.")
 
         serializer.save(status=Appointment.Status.CONFIRMED)

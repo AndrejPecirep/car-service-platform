@@ -1,24 +1,16 @@
-# Architecture
+# Architecture Overview
 
-The system uses a hybrid architecture.
+## Frontend
+A Flask-based server-rendered dashboard used for authentication and operational views.
 
-Components:
+## Backend
+A Django REST API that exposes authentication, vehicles, services, appointments, staff, customers, and dashboard summary endpoints.
 
-Django
-- Authentication
-- Admin panel
-- Core business models
+## Database
+PostgreSQL stores users, vehicles, services, and appointment data.
 
-Flask
-- Lightweight API
-- Booking microservice
-- Availability service
-
-PostgreSQL
-- Shared database
-
-Docker
-- Container orchestration
-
-Nginx
-- Reverse proxy
+## Deployment
+Recommended target:
+- Frontend on Render
+- Backend on Render
+- PostgreSQL on Render

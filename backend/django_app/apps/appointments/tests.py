@@ -33,7 +33,7 @@ class AppointmentTest(TestCase):
         )
 
         self.service = Service.objects.create(
-            name="Veliki servis",
+            name="Major Service",
             duration_minutes=120,
             price=300
         )

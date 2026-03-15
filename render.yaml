@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: car-service-backend
+    runtime: python
+    rootDir: backend/django_app
+    buildCommand: pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_DEBUG
+        value: False
+      - key: DJANGO_ALLOWED_HOSTS
+        value: car-service-backend.onrender.com
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: car-service-db
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: car-service-db
+          property: port
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: car-service-db
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: car-service-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: car-service-db
+          property: password
+
+  - type: web
+    name: car-service-frontend
+    runtime: python
+    rootDir: frontend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: FRONTEND_SECRET_KEY
+        generateValue: true
+      - key: API_URL
+        fromService:
+          type: web
+          name: car-service-backend
+          property: url
+
+databases:
+  - name: car-service-db
+    plan: free
