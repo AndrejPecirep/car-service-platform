@@ -7,6 +7,7 @@ from apps.services.views import ServiceViewSet
 from apps.users import views as user_views
 from apps.users.views import CustomerViewSet, StaffViewSet, UserViewSet
 from apps.vehicles.views import VehicleViewSet
+from config.health import health
 
 router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="user")
@@ -17,6 +18,7 @@ router.register(r"services", ServiceViewSet, basename="service")
 router.register(r"appointments", AppointmentViewSet, basename="appointment")
 
 urlpatterns = [
+    path("health/", health, name="health"),
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
     path("api/auth/login/", user_views.LoginView.as_view(), name="login"),

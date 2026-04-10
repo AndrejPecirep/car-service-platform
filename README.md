@@ -40,3 +40,10 @@ Do not add `/api` at the end.
 - demo data seeding command for backend testing
 
 See `DEPLOY_RENDER.md` for the full deployment guide.
+
+
+## Render-ready updates
+- Backend now supports `DATABASE_URL` directly for Render PostgreSQL.
+- Optional `DB_SSL=true` is supported for external Postgres connections.
+- Added `/health/` endpoint for Render health checks.
+- Optional `CSRF_TRUSTED_ORIGINS` env var is supported for production domains.

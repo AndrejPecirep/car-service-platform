@@ -134,3 +134,10 @@ If the backend is sleeping on the free plan, the first request can take a little
 
 ## 9. Free plan note
 Render free services can spin down after inactivity. Render free PostgreSQL is suitable for demo and testing use, not long-term production use.
+
+
+## Render-ready updates
+- Backend now supports `DATABASE_URL` directly for Render PostgreSQL.
+- Optional `DB_SSL=true` is supported for external Postgres connections.
+- Added `/health/` endpoint for Render health checks.
+- Optional `CSRF_TRUSTED_ORIGINS` env var is supported for production domains.
