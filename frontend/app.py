@@ -80,13 +80,15 @@ def register():
         "last_name": request.form.get("last_name", "").strip(),
         "password": request.form.get("password", ""),
     }
+
     response = api_request("POST", "/api/auth/register/", json=payload, auth=False)
+
     if response.status_code not in (200, 201):
         try:
-            message = response.json().get("error", "Registration failed.")
+            message = response.json().get("error", response.text)
         except Exception:
-            message = "Registration failed."
-        flash(message, "error")
+            message = response.text or "Registration failed."
+        flash(f"Registration failed: {message}", "error")
         return redirect(url_for("login_page"))
 
     data = response.json()
